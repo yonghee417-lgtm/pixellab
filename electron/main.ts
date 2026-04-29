@@ -60,8 +60,15 @@ function getFontDir() {
 }
 
 function createWindow() {
+  // 개발 모드에서 윈도우 타이틀바/작업표시줄 아이콘 표시.
+  // 패키지된 앱은 OS가 ICO/ICNS를 사용하므로 별도 지정 불필요.
+  const iconPath = VITE_DEV_SERVER_URL
+    ? path.join(process.env.APP_ROOT!, 'build', 'icon.png')
+    : undefined;
+
   mainWindow = new BrowserWindow({
     title: 'PixelLab',
+    icon: iconPath,
     width: 1480,
     height: 920,
     minWidth: 1100,

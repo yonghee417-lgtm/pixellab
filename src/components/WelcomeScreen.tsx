@@ -6,6 +6,7 @@ import {
   addRecentExternal, getRecentExternal, removeRecentExternal, type RecentExternalFile,
 } from '../utils/recents';
 import { ConfirmDialog } from './ConfirmDialog';
+import logoUrl from '../assets/logo.png';
 
 type RecentItem =
   | { type: 'library'; project: Project; sortTime: number }
@@ -95,13 +96,21 @@ export function WelcomeScreen() {
       {/* 좌측 — 새 프로젝트 */}
       <div className="flex-1 overflow-y-auto p-12">
         <div className="w-full max-w-2xl mx-auto">
-          <h1 className="text-5xl font-bold mb-2 tracking-tight flex items-baseline gap-3">
-            <span>
-              <span className="brand-gradient">Pixel</span>
-              <span className="text-text-primary">Lab</span>
-            </span>
-            <span className="text-xs text-text-muted font-normal tracking-normal">v{__APP_VERSION__}</span>
-          </h1>
+          <div className="flex items-center gap-4 mb-2">
+            <img
+              src={logoUrl}
+              alt=""
+              className="w-14 h-14 rounded-xl shadow-lg bg-white shrink-0"
+              draggable={false}
+            />
+            <h1 className="text-5xl font-bold tracking-tight flex items-baseline gap-3">
+              <span>
+                <span className="brand-gradient">Pixel</span>
+                <span className="text-text-primary">Lab</span>
+              </span>
+              <span className="text-xs text-text-muted font-normal tracking-normal">v{__APP_VERSION__}</span>
+            </h1>
+          </div>
           <p className="text-text-secondary mb-10">사진 편집 · 그래픽 디자인 도구</p>
 
           <div className="space-y-7">

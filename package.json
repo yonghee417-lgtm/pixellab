@@ -40,6 +40,7 @@
   "build": {
     "appId": "com.pixellab.app",
     "productName": "PixelLab",
+    "icon": "build/icon.png",
     "directories": {
       "output": "release"
     },
@@ -53,17 +54,22 @@
       "node_modules/@imgly/background-removal/**"
     ],
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "build/icon.png"
     },
     "mac": {
       "target": "dmg",
-      "category": "public.app-category.graphics-design"
+      "category": "public.app-category.graphics-design",
+      "icon": "build/icon.png"
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "shortcutName": "PixelLab"
+      "shortcutName": "PixelLab",
+      "installerIcon": "build/icon.png",
+      "uninstallerIcon": "build/icon.png",
+      "installerHeaderIcon": "build/icon.png"
     }
   }
 }

@@ -3,6 +3,7 @@ import { useProjectStore } from './store/projectStore';
 import { WelcomeScreen } from './components/WelcomeScreen';
 import { Editor } from './components/Editor';
 import { useFonts } from './hooks/useFonts';
+import logoUrl from './assets/logo.png';
 
 export function App() {
   const project = useProjectStore((s) => s.project);
@@ -50,12 +51,22 @@ export function App() {
   if (bootMsg) {
     return (
       <div className="h-full w-full flex items-center justify-center bg-bg-base text-text-secondary">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold mb-2">
+        <div className="text-center px-8">
+          <img
+            src={logoUrl}
+            alt="PixelLab"
+            className="w-32 h-32 mx-auto mb-6 rounded-2xl shadow-2xl bg-white"
+            draggable={false}
+          />
+          <h1 className="text-3xl font-bold mb-2 tracking-tight">
             <span className="brand-gradient">Pixel</span>
             <span className="text-text-primary">Lab</span>
+            <span className="ml-2 text-xs text-text-muted font-normal align-middle">v{__APP_VERSION__}</span>
           </h1>
-          <p>{bootMsg}</p>
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <span className="inline-block w-2 h-2 rounded-full bg-accent animate-pulse" />
+            <p className="text-sm">{bootMsg}</p>
+          </div>
         </div>
       </div>
     );
