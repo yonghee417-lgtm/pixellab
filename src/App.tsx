@@ -1,0 +1,65 @@
+import { useEffect, useState } from 'react';
+import { useProjectStore } from './store/projectStore';
+import { WelcomeScreen } from './components/WelcomeScreen';
+import { Editor } from './components/Editor';
+import { useFonts } from './hooks/useFonts';
+
+export function App() {
+  const project = useProjectStore((s) => s.project);
+  const [bootMsg, setBootMsg] = useState<string | null>('초기화 중...');
+  useFonts();
+
+  useEffect(() => {
+    if (!window.api) {
+      setBootMsg('Electron 환경이 감지되지 않았습니다. `npm run dev` 로 실행해주세요.');
+      return;
+    }
+    setBootMsg(null);
+  }, []);
+
+  // 자동 저장 — 변경 1초 디바운스, 30초 인터벌, blur/beforeunload 즉시 저장
+  const saveNow = () => {
+    const state = useProjectStore.getState();
+    const snapshot = state.getSerializableProject();
+    if (!snapshot) return;
+    if (state.currentFilePath) {
+      window.api?.saveProjectToPath(snapshot, state.currentFilePath).catch(() => {});
+    } else {
+      window.api?.saveProject(snapshot).catch(() => {});
+    }
+  };
+
+  useEffect(() => {
+    if (!project) return;
+    const t = setTimeout(saveNow, 1000);
+    return () => clearTimeout(t);
+  }, [project]);
+
+  useEffect(() => {
+    if (!project) return;
+    const interval = setInterval(saveNow, 30_000);
+    window.addEventListener('blur', saveNow);
+    window.addEventListener('beforeunload', saveNow);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('blur', saveNow);
+      window.removeEventListener('beforeunload', saveNow);
+    };
+  }, [project?.id]);
+
+  if (bootMsg) {
+    return (
+      <div className="h-full w-full flex items-center justify-center bg-bg-base text-text-secondary">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold mb-2">
+            <span className="brand-gradient">Pixel</span>
+            <span className="text-text-primary">Lab</span>
+          </h1>
+          <p>{bootMsg}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return project ? <Editor /> : <WelcomeScreen />;
+}

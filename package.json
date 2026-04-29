@@ -1,0 +1,69 @@
+{
+  "name": "pixellab",
+  "private": true,
+  "version": "1.0.0",
+  "description": "픽셀랩 - 사진 편집 / 그래픽 디자인 도구 (Photoshop-lite)",
+  "main": "dist-electron/main.js",
+  "author": "PixelLab",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build && electron-builder",
+    "build:unpack": "tsc -b && vite build && electron-builder --dir",
+    "preview": "vite preview",
+    "lint": "tsc --noEmit",
+    "fonts": "node scripts/download-fonts.mjs"
+  },
+  "dependencies": {
+    "@imgly/background-removal": "^1.5.5",
+    "fabric": "^6.4.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "uuid": "^10.0.0",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "@types/react": "^18.3.10",
+    "@types/react-dom": "^18.3.0",
+    "@types/uuid": "^10.0.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "electron": "^32.1.2",
+    "electron-builder": "^25.0.5",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8",
+    "vite-plugin-electron": "^0.28.8",
+    "vite-plugin-electron-renderer": "^0.14.6"
+  },
+  "build": {
+    "appId": "com.pixellab.app",
+    "productName": "PixelLab",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist",
+      "dist-electron",
+      "assets/fonts/**/*"
+    ],
+    "asarUnpack": [
+      "assets/fonts/**",
+      "node_modules/@imgly/background-removal/**"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.graphics-design"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "PixelLab"
+    }
+  }
+}
