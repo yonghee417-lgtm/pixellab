@@ -5,9 +5,12 @@ import { Editor } from './components/Editor';
 import { useFonts } from './hooks/useFonts';
 import logoUrl from './assets/logo.png';
 
+// 시작 시 스플래시 로딩 화면 노출 시간 (ms)
+const SPLASH_DURATION_MS = 3000;
+
 export function App() {
   const project = useProjectStore((s) => s.project);
-  const [bootMsg, setBootMsg] = useState<string | null>('초기화 중...');
+  const [bootMsg, setBootMsg] = useState<string | null>('PixelLab을 준비하고 있어요...');
   useFonts();
 
   useEffect(() => {
@@ -15,7 +18,9 @@ export function App() {
       setBootMsg('Electron 환경이 감지되지 않았습니다. `npm run dev` 로 실행해주세요.');
       return;
     }
-    setBootMsg(null);
+    // 스플래시 화면을 잠시 보여주고 메인으로 진입
+    const timer = setTimeout(() => setBootMsg(null), SPLASH_DURATION_MS);
+    return () => clearTimeout(timer);
   }, []);
 
   // 자동 저장 — 변경 1초 디바운스, 30초 인터벌, blur/beforeunload 즉시 저장

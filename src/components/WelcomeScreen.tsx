@@ -6,6 +6,7 @@ import {
   addRecentExternal, getRecentExternal, removeRecentExternal, type RecentExternalFile,
 } from '../utils/recents';
 import { ConfirmDialog } from './ConfirmDialog';
+import { BannerSlot } from './BannerSlot';
 import logoUrl from '../assets/logo.png';
 
 type RecentItem =
@@ -93,27 +94,28 @@ export function WelcomeScreen() {
 
   return (
     <div className="h-full w-full flex bg-bg-base">
-      {/* 좌측 — 새 프로젝트 */}
-      <div className="flex-1 overflow-y-auto p-12">
-        <div className="w-full max-w-2xl mx-auto">
-          <div className="flex items-center gap-4 mb-2">
-            <img
-              src={logoUrl}
-              alt=""
-              className="w-14 h-14 rounded-xl shadow-lg bg-white shrink-0"
-              draggable={false}
-            />
-            <h1 className="text-5xl font-bold tracking-tight flex items-baseline gap-3">
-              <span>
-                <span className="brand-gradient">Pixel</span>
-                <span className="text-text-primary">Lab</span>
-              </span>
-              <span className="text-xs text-text-muted font-normal tracking-normal">v{__APP_VERSION__}</span>
-            </h1>
-          </div>
-          <p className="text-text-secondary mb-10">사진 편집 · 그래픽 디자인 도구</p>
+      {/* 좌측 — 새 프로젝트 (헤더/배너 고정 + 가운데 스크롤) */}
+      <div className="flex-1 flex flex-col min-h-0">
+        {/* ① 상단 고정 영역: 로고 + 타이틀 + 이름입력 + 시작버튼 */}
+        <div className="flex-shrink-0 px-12 pt-10 pb-5 border-b border-border-subtle bg-bg-base">
+          <div className="w-full max-w-2xl mx-auto">
+            <div className="flex items-center gap-4 mb-2">
+              <img
+                src={logoUrl}
+                alt=""
+                className="w-14 h-14 rounded-xl shadow-lg bg-white shrink-0"
+                draggable={false}
+              />
+              <h1 className="text-5xl font-bold tracking-tight flex items-baseline gap-3">
+                <span>
+                  <span className="brand-gradient">Pixel</span>
+                  <span className="text-text-primary">Lab</span>
+                </span>
+                <span className="text-xs text-text-muted font-normal tracking-normal">v{__APP_VERSION__}</span>
+              </h1>
+            </div>
+            <p className="text-text-secondary mb-5">사진 편집 · 그래픽 디자인 도구</p>
 
-          <div className="space-y-7">
             <div>
               <div className="flex gap-3 items-end">
                 <div className="flex-1 min-w-0">
@@ -122,6 +124,12 @@ export function WelcomeScreen() {
                     ref={nameInputRef}
                     type="text"
                     defaultValue="새 프로젝트"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleStart();
+                      }
+                    }}
                     onChange={() => duplicateError && setDuplicateError(null)}
                     spellCheck={false}
                     autoComplete="off"
@@ -145,7 +153,12 @@ export function WelcomeScreen() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
 
+        {/* ② 가운데 스크롤 영역: 캔버스 크기 + 배경 */}
+        <div className="flex-1 overflow-y-auto px-12 py-6 min-h-0">
+          <div className="w-full max-w-2xl mx-auto space-y-7">
             <div>
               <label className="block text-sm text-text-secondary mb-3">캔버스 크기</label>
               {GROUPS.map((g) => {
@@ -250,17 +263,18 @@ export function WelcomeScreen() {
                 )}
               </div>
             </div>
-
-            <button onClick={handleStart} className="btn-primary w-full text-base py-3">
-              프로젝트 시작
-            </button>
           </div>
+        </div>
+
+        {/* ③ 하단 고정 배너 (메인화면 하단 600×60) */}
+        <div className="flex-shrink-0 border-t border-border-subtle p-3 flex justify-center bg-bg-base/50">
+          <BannerSlot slotId="main-bottom" width={600} height={60} label="메인화면하단배너광고" />
         </div>
       </div>
 
-      {/* 우측 — 최근 프로젝트 */}
+      {/* 우측 — 최근 프로젝트 (헤더/배너 고정 + 가운데 스크롤) */}
       <div className="w-80 panel border-l flex flex-col">
-        <div className="p-4 border-b border-border-subtle flex items-center justify-between">
+        <div className="flex-shrink-0 p-4 border-b border-border-subtle flex items-center justify-between">
           <h2 className="font-semibold text-text-primary">최근 프로젝트</h2>
           <button
             onClick={async () => {
@@ -283,7 +297,7 @@ export function WelcomeScreen() {
             📁 찾아 열기
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto p-2">
+        <div className="flex-1 overflow-y-auto p-2 min-h-0">
           {recentItems.length === 0 ? (
             <div className="text-text-muted text-sm text-center mt-8 px-4">
               저장된 프로젝트가 없습니다
@@ -345,8 +359,12 @@ export function WelcomeScreen() {
             );
           })}
         </div>
-        <div className="p-3 border-t border-border-subtle text-[10px] text-text-muted leading-snug">
+        <div className="flex-shrink-0 p-3 border-t border-border-subtle text-[10px] text-text-muted leading-snug">
           📚 라이브러리 자동 저장 · 📁 외부 파일 (다른 이름으로 저장)
+        </div>
+        {/* 프로젝트 패널 하단 배너 (300×60) */}
+        <div className="flex-shrink-0 p-3 border-t border-border-subtle flex justify-center bg-bg-base/40">
+          <BannerSlot slotId="panel-bottom" width={300} height={60} label="사이드하단배너" />
         </div>
       </div>
 

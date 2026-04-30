@@ -33,6 +33,10 @@ const api = {
     ipcRenderer.invoke('fonts:list'),
   fontsDir: (): Promise<string> => ipcRenderer.invoke('fonts:dir'),
 
+  // 외부 URL 열기 (배너 클릭 등) — 사용자 기본 브라우저로
+  openExternalUrl: (url: string): Promise<boolean> =>
+    ipcRenderer.invoke('shell:openExternal', url),
+
   // 미디어 URL 변환 (절대 경로 → pixellab-media://)
   toMediaUrl: (filePath: string) => {
     const normalized = filePath.replace(/\\/g, '/');
